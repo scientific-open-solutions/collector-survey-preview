@@ -583,9 +583,13 @@ function write(type, row){
 }
 
 function load_survey(survey){
-  // are we in preview?
-  /////////////////////
-  if(typeof(parent.master_json) !== "undefined" && parent.master_json.surveys.preview){
+
+  /*
+  * are we in preview?
+  */
+  if(typeof(parent.collector_survey_preview) !== "undefined"){
+    survey_content = survey;
+  } else if(typeof(parent.master_json) !== "undefined" && parent.master_json.surveys.preview){
     survey_content = survey;
     survey_obj.mods = parent.master_json.mods;
   } else {
