@@ -18,27 +18,25 @@
 
 		Kitten/Cat release (2019-2021) author: Dr. Anthony Haffey (team@someopen.solutions)
 -->
-<script>
-////////////////////////////////////////
-// To allow development within gitpod //
-////////////////////////////////////////
-if(Collector.detect_context() == "gitpod"){
+<script src="libraries/jquery-3.3.1.min.js"></script>
+<script src="Handsontables/handsontables.full.js"></script>
+<script src="Handsontables/HandsontablesFunctions.js"></script>
+<link rel="stylesheet" href="Handsontables/handsontables.full.css"></link>
+<link rel="stylesheet" href="libraries/bootstrapCollector.css"></link>
+<script src="libraries/bootbox.5.4.min.js"></script>
+<script src="libraries/bootstrap.4.0.min.js"></script>
+<style>
 
-  var gitpod_surveys = true;
-  document.write('<script src="../../CollectorMap.js"><\/script>');
-
-  function get_map(){
-    if(typeof(isolation_map) !== "undefined"){
-      collector_map = this_map("Surveys.html");
-    } else {
-      setTimeout(function(){
-        get_map();
-        load_default_surveys();
-      },1000);
-    }
-  }
-  get_map();
+#survey_interface{
+	padding: 5px;
 }
+</style>
+<button class="btn btn-primary">hi</button>
+<script>
+/*
+* To allow development within gitpod //
+*/
+
 </script>
 <script>
 
@@ -91,31 +89,10 @@ function load_default_surveys(){
 }
 </script>
 
-<style>
-#spreadsheet_preview_tabs{
-	display:none;
-}
-#survey_interface{
-	padding: 5px;
-}
-</style>
 
 <nav class="navbar navbar-primary bg-white fixed-top fixed-top-2">
   <table style = "max-width:80%">
     <tr>
-      <td>
-        <button class='btn btn-primary' type='button' id="new_survey_button" title="Will create a new survey based on the one you have selected. Please select one of the existing surveys if you haven't already to be able to create a new survey based on it.">New Survey</button>
-      </td>
-      <td>
-        <select id='survey_select' class="form-control" previousValue="">
-          <option disabled selected>Please select a survey</option>
-        </select>
-      </td>
-      <td>
-        <button id='save_survey_btn' class='btn btn-primary'>Save</button>
-        <button id='rename_survey_btn' class='btn btn-primary'>Rename</button>
-        <button id='delete_survey_btn' class='btn btn-primary'>Delete</button>
-      </td>
       <td id="spreadsheet_preview_tabs">
         <ul  class="nav nav-pills mb-3 bg-secondary" id="pills-tab" role="tablist">
           <li class="nav-item">
@@ -157,13 +134,12 @@ function create_survey_HoT(this_survey){
 		colHeaders: false,
 		contextMenu: {
 			items: {
-				"about": { // Own custom option
-					name: function () { // `name` can be a string or a function
-						return '<b>Edit cell</b>'; // Name can contain HTML
+				"about": {
+					name: function () {
+						return '<b>Edit cell</b>';
 					},
-					hidden: function () { // `hidden` can be a boolean or a function
-						// Hide the option when the first column was clicked
-						return this.getSelectedLast()[0] == 0; // `this` === hot3
+					hidden: function () {
+						return this.getSelectedLast()[0] == 0;
 					},
 					callback: function(key, selection, clickEvent) { // Callback for specific option
 						this_sheet = this;
@@ -247,16 +223,7 @@ function create_survey_HoT(this_survey){
 		},
 		afterChange: function(){
 
-			/*
-			* Check if they have just made a change to a default survey
-			*/
 
-			var current_survey = $("#survey_select").val()
-																							.split("|")[1];
-
-			if(typeof(master_json.surveys.default_surveys[current_survey]) !== "undefined"){
-				Collector.custom_alert("These changes will not be saved, as you are editing a <b>default</b> survey. Please click <b>New Survey</b> to create a new survey");
-			}
 
       var middleColEmpty=0;
 			var middleRowEmpty=0;
@@ -315,57 +282,26 @@ function create_survey_HoT(this_survey){
   preview_survey(this_survey);
 }
 
-function list_surveys(){
-  try{
-    $("#survey_select").empty();
-    $("#survey_select").append(
-      "<option disabled>Select a survey</option>"
-    );
-    $("#survey_select").val("Select a survey");
+var data = [
+  ['item_name', 'text', 'Type', 'Answers', 'Values'],
+  ['Instructions1', "<span style='color:#006699'><span style='font-size:20px'>Choose one response that best describes how strongly each item applies to you:</span></span>", "Instruct", "", ""],
+  ['AQ1', "I prefer to do things with others rather than on my own.", "likert", "Definitely agree|Slightly agree|Slightly disagree|Definitely disagree", "1|1|0|0"]
+];
 
-    if(typeof(master_json.surveys) == "undefined" ||
-      typeof(master_json.surveys.user_surveys) == "undefined"){
-      master_json.surveys = {
-        preview         : false,
-        user_surveys    : {}
-      }
-    }
-    master_json.surveys = typeof(master_json.surveys) == "undefined" ? {} : master_json.surveys;
-    master_json.surveys.default_surveys = {};
+/*
 
-    master_json.surveys.user_surveys = typeof(master_json.surveys.user_surveys) == "undefined" ? {} : master_json.surveys.user_surveys;
-    master_json.surveys.default_surveys = Collector.clean_obj_keys(master_json.surveys.default_surveys);
 
-    var def_survey_list  = Object.keys(master_json.surveys.default_surveys).sort();
-    var user_survey_list = Object.keys(master_json.surveys.user_surveys).sort();
+  */
 
-    load_default_surveys();
-    user_survey_list.forEach(function(user_survey){
-      $("#survey_select").append($("<option>",{
-        text:user_survey,
-        value:"user|" + user_survey,
-        class:"bg-white text-dark"
-      }));
-    });
-    if(Collector.detect_context() !== "localhost"){
-      synch_surveys();
-    } else {
-      Collector.tests.pass("surveys",
-                         "list");
-    }
-  } catch(error){
-    /* muting this error for now
 
-    Collector.tests.fail("surveys",
-                         "list",
-                         error);
-                         */
-  }
-}
+
+
+create_survey_HoT(data);
+
+
 
 function preview_survey(this_survey){
-  master_json.surveys.preview = true;
-	$("#survey_preview").css("height",window.innerHeight - 100)
+  $("#survey_preview").css("height",window.innerHeight - 100)
 	if($("#help_content").is(":visible")){
 		var helper_width = parseFloat($("#help_content").css("width").replace("px",""));
 
@@ -390,49 +326,25 @@ function preview_survey(this_survey){
 		$("#survey_preview").css("width",window.innerWidth);
 	}
 
-  switch(Collector.detect_context()){
-    case "localhost":
-      survey_template = Collector.electron.fs.read_default(
-        "Trialtypes",
-        "survey.html"
-      );
-      survey_template = survey_template.replace(
-        '"{{survey}}"',
-        JSON.stringify(
-          this_survey
-        )
-      );
+
+    survey_template = $.get("survey.html", function(survey_template){
+      survey_template = survey_template.replace('"{{survey}}"',
+                                                JSON.stringify(this_survey));
 
       doc = document.getElementById('survey_preview').contentWindow.document;
-  		doc.open();
-  		doc.write('<scr' + 'ipt src="libraries/jquery-3.3.1.min.js"></scr' + 'ipt>' +
-    						'<scr' + 'ipt src= "libraries/bootstrap.4.0.min.js"></scr' + 'ipt>' +
-    						'<scr' + 'ipt src= "libraries/bootbox.5.4.min.js"></scr' + 'ipt>' +
-    						'<scr' + 'ipt src= "libraries/popper.min.js"></scr' + 'ipt>' +
-    						'<lin' + 'k rel="stylesheet" type="text/css" href="libraries/bootstrapCollector.css">' +
-    						'<lin' + 'k rel="stylesheet" type="text/css" href="libraries/bootbox.fix.css">' +
-    						'<scr' + 'ipt src= "libraries/papaparse.4.3.6.min.js"></scr' + 'ipt>' +
-  							survey_template);
-      break;
-    default:
-      survey_template = $.get("../Default/Trialtypes/survey.html", function(survey_template){
-        survey_template = survey_template.replace('"{{survey}}"',
-                                                  JSON.stringify(this_survey));
+      doc.open();
+      doc.write('<scr' + 'ipt src="libraries/jquery-3.3.1.min.js"></scr' + 'ipt>' +
+                '<scr' + 'ipt src= "libraries/bootstrap.4.0.min.js"></scr' + 'ipt>' +
+                '<scr' + 'ipt src= "libraries/bootbox.5.4.min.js"></scr' + 'ipt>' +
+                '<scr' + 'ipt src= "libraries/popper.min.js"></scr' + 'ipt>' +
+                '<lin' + 'k rel="stylesheet" type="text/css" href="libraries/bootstrapCollector.css">' +
+                '<lin' + 'k rel="stylesheet" type="text/css" href="libraries/bootbox.fix.css">' +
+                '<scr' + 'ipt src= "libraries/papaparse.4.3.6.min.js"></scr' + 'ipt>' +
+                survey_template);
+      doc.close();
+    });
 
-        doc = document.getElementById('survey_preview').contentWindow.document;
-        doc.open();
-        doc.write('<scr' + 'ipt src="libraries/jquery-3.3.1.min.js"></scr' + 'ipt>' +
-                  '<scr' + 'ipt src= "libraries/bootstrap.4.0.min.js"></scr' + 'ipt>' +
-                  '<scr' + 'ipt src= "libraries/bootbox.5.4.min.js"></scr' + 'ipt>' +
-                  '<scr' + 'ipt src= "libraries/popper.min.js"></scr' + 'ipt>' +
-                  '<lin' + 'k rel="stylesheet" type="text/css" href="libraries/bootstrapCollector.css">' +
-                  '<lin' + 'k rel="stylesheet" type="text/css" href="libraries/bootbox.fix.css">' +
-                  '<scr' + 'ipt src= "libraries/papaparse.4.3.6.min.js"></scr' + 'ipt>' +
-                  survey_template);
-        doc.close();
-      });
-      break;
-  }
+
 }
 
 function synch_surveys(){
@@ -758,7 +670,4 @@ survey_obj = {
 	}
 }
 
-if(typeof(gitpod_surveys) !== "undefined"){
-  list_surveys();
-}
 </script>
