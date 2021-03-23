@@ -1,22 +1,21 @@
 <!--
-    Collector (Garcia, Kornell, Kerr, Blake & Haffey)
-    A program for running experiments on the web
-    Copyright 2012-2016 Mikey Garcia & Nate Kornell
+  Collector (Garcia, Kornell, Kerr, Blake & Haffey)
+  A program for running experiments on the web
+  Copyright 2012-2016 Mikey Garcia & Nate Kornell
 
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License version 3 as published by
+  the Free Software Foundation.
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License version 3 as published by
-    the Free Software Foundation.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>
-
-		Kitten/Cat release (2019-2021) author: Dr. Anthony Haffey (team@someopen.solutions)
+	Kitten/Cat release (2019-2021) author: Dr. Anthony Haffey (team@someopen.solutions)
 -->
 
 <style>
@@ -29,7 +28,7 @@
 	padding:20px;
 }
 #help_content{
-  width: 200px;
+  width: 250px;
 	position:fixed;
 	right:0px;
 	top:100px;
@@ -88,8 +87,6 @@ function load_help(this_list){
   });
 	$("#survey_preview").animate({
 		"width": window.innerWidth - helper_width
-	}, 500,function(){
-		cell_editor.resize();
 	});
 }
 load_help(Object.keys(help_dictionary));
@@ -235,27 +232,24 @@ function helperActivate(help_title, cellValue,help_type){
 }
 
 $("#help_btn").on("click",function(){
-  if($("#help_area").is(":visible")){
+  if($("#help_content").is(":visible")){
 		$("#help_btn").css("font-weight","normal");
 		$("#help_btn").removeClass("btn-outline-primary");
 		$("#help_btn").removeClass("bg-white");
 		$("#help_btn").addClass("btn-primary");
-		$("#help_area").hide(500);
+		$("#help_content").fadeOut(500);
     $("#survey_preview").animate({
 			"width": window.innerWidth
 		}, 500);
 	} else {
-		$("#help_area").show(500);
+		$("#help_content").fadeIn(500);
 		$("#help_btn").css("font-weight","bold");
 		$("#help_btn").addClass("btn-outline-primary");
 		$("#help_btn").addClass("bg-white");
 		$("#help_btn").removeClass("btn-primary");
 
-
     var helper_width = parseFloat($("#help_content").css("width").replace("px",""));
-    var graphic_width = parseFloat($("#graphic_settings").css("width").replace("px",""));
-    var max_width = Math.max(helper_width,
-                             graphic_width);
+    var max_width = Math.max(helper_width);
     $("#survey_preview").animate({
 			"width": window.innerWidth - helper_width
 		});
