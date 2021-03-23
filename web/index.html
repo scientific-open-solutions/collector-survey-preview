@@ -27,6 +27,7 @@
 <script src="libraries/bootstrap.4.0.min.js"></script>
 <script src="libraries/ace-master/ace.js"></script>
 <script src="libraries/ace-master/ext-language_tools.js"></script>
+<script src="libraries/papaparse.min.js"></script>
 
 
 <style>
@@ -52,6 +53,11 @@
           <span class='content_name'>Help</span>
         </button>
       </td>
+      <td>
+        <button class="top_icon btn btn-primary bi-life-preserver" id="download_btn" style="margin:2px; font-weight:bold">
+          <span class='content_name'>Download</span>
+        </button>
+      </td>
     </tr>
   </table>
 </nav>
@@ -65,13 +71,26 @@
 </div>
 <div id="helper_div"></div>
 <div id="handsontable_html"></div>
+
 <script>
+$("#download_btn").on("click",function(){
+  var content = Papa.unparse(survey_HoT.getData());
+
+  var blob = new Blob([content], {type: 'text/csv'});
+		if(window.navigator.msSaveOrOpenBlob) {
+			window.navigator.msSaveBlob(blob, "survey.csv");
+		}	else{
+			var elem = window.document.createElement('a');
+			elem.href = window.URL.createObjectURL(blob);
+			elem.download = "survey.csv";
+			document.body.appendChild(elem);
+			elem.click();
+			document.body.removeChild(elem);
+		}
+
+});
+
 $("#handsontable_html").load("CellEditor.html");
-</script>
-
-
-
-<script>
 
 var libraries = '<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />' +
                 '<scr' + 'ipt src="https://code.jquery.com/jquery-3.2.1.min.js"></scr' + 'ipt>' +
