@@ -53,6 +53,11 @@
           </li>
         </ul>
       </td>
+      <td>
+        <button class="top_icon btn btn-outline-primary bg-white bi-life-preserver" id="help_btn" style="margin:2px; font-weight:bold">
+          <span class='content_name'>Help</span>
+        </button>
+      </td>
     </tr>
   </table>
 </nav>
@@ -64,10 +69,13 @@
     <iframe id="survey_preview"></iframe>
   </div>
 </div>
+<div id="helper_div"></div>
 
 
 
 <script>
+$("#helper_div").load("Helper.html");
+
 var collector_survey_preview = true;
 
 var survey_HoT;
